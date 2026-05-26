@@ -136,6 +136,8 @@ class CollectionStream(Stream):
 
     def get_records(self, context: Context | None) -> t.Iterable[dict]:
         bookmark = self.get_starting_replication_key_value(context)
+        if bookmark and self.replication_key == "_id":
+            bookmark = ObjectId(bookmark)
         for record in self._collection.find(
             {self.replication_key: {"$gt": bookmark}} if bookmark else {}
         ):
